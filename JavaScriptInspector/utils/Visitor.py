@@ -9,6 +9,9 @@ Created on Oct 27, 2013
 import jsparser as jsparser
 from jsparser import SyntaxError_
 from collections import defaultdict
+from utils import Observer
+
+call_event = Observer.Sender()
 
 class Visitor(object):
     CHILD_ATTRS = ['thenPart', 'elsePart', 'expression', 'body', 'initializer']
@@ -16,6 +19,7 @@ class Visitor(object):
     def __init__(self, filepath):
         self.filepath = filepath
         self.functions_list = []
+        
         #List of functions by line # and set of names
         self.functions = defaultdict(set)
         with open(filepath) as myFile:
@@ -52,7 +56,6 @@ class Visitor(object):
     def visit_CALL(self, node):
         rules = ['bootstrap', 'jquery', 'pqgrid', 'webrtc']
         
-        ruled_out = False
         for r in rules:
             if r in self.filepath:
                 return ''
@@ -60,11 +63,12 @@ class Visitor(object):
         if(not "jquery" in self.filepath):
             try:
     #             print(node)
-                print("%s|%s" %(self.filepath, node.lineno))
+#                 print("%s|%s" %(self.filepath, node.lineno))
                 name = ""
                 for pnode in node:
                     name+= self.loop(pnode)
-                print(name)
+#                 print(name)
+                call_event.dispatch(event='command.call', msg=name)
     #             print(dir(node[0]))
     #             exit()
             except:

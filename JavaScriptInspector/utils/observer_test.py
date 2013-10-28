@@ -17,6 +17,7 @@ if __name__=="__main__":
      
      
     call_event = Sender()
+    call_event1 = Sender()
     bob = ExampleListener('bob')
     charlie = ExampleListener('charlie')
     dave = ExampleListener('dave')
